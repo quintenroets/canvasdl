@@ -37,8 +37,10 @@ This convenient package:
       - Go to Courseworks > Account > Settings
       - Click on "New Access Token"
     - [General instructions](https://community.canvaslms.com/t4/Admin-Guide/How-do-I-add-a-developer-API-key-for-an-account/ta-p/259)
-4) Put API key in config file
+4) Add API key to config file
    - at $HOME/Scripts/assets/canvasdl/config.yaml
+5) Add Canvas url to config file
+   - For Columbia University students: https://courseworks2.columbia.edu
 
 ## Usage
 Run command to synchronize all content
