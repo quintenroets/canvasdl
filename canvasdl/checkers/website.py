@@ -32,6 +32,7 @@ class Url(SaveItem):
 
     def save(self):
         if self.local_file.suffix == ".html":
+            self.folder /= "Homepage"
             base_tag = f"<base href='{self.root_url}'>"
             self.local_file.text = base_tag + requests.get(self.url).text
         else:
@@ -57,21 +58,34 @@ class Checker(base.Checker):
             else Url(item, self.url, self.path.parent)
         )
 
+    def get_urls(self):
+        return config.website[self.course.name]
+
     @cached_property
     def url(self):
-        return config.website[self.course.name]
+        urls = self.get_urls()
+        root_url = next(iter(urls))
+        if not root_url.endswith("/"):
+            root_url = f"{root_url}/"
+        return root_url
+
+    def sub_urls(self):
+        return next(iter(self.get_urls().values()))
 
     @property
     def path(self):
         return super().path / "Homepage.html"
 
     def get_items(self):
-        html_content = requests.get(self.url).content
-        items = [
-            *self.get_calendar_items(html_content),
-            *self.get_content_items(html_content),
-        ]
-        return items
+        for sub_url in self.sub_urls():
+            url = f"{self.url}/{sub_url}"
+            yield from self.get_url_items(url)
+
+    def get_url_items(self, url):
+        html_content = requests.get(url).content
+        for extractor in (self.get_calendar_items, self.get_content_items):
+            for item in extractor(html_content):
+                yield item
 
     def get_content_items(self, html_content):
         soup = BeautifulSoup(html_content, features="lxml")
@@ -87,13 +101,19 @@ class Checker(base.Checker):
         with io.BytesIO(html_content) as fp:
             tables = pd.read_html(fp)
 
-        calendar_table = next(t for t in tables if "Due" in t.columns)
-        calendar_items = calendar_table[~calendar_table["Due"].isnull()]
-        for _, item in calendar_items.iterrows():
-            yield (
-                self.course.assignment_name(item["Due"]),
-                dateutil.parser.parse(item["Date"]),
-            )
+        for table in tables:
+            if "Due" in table.columns:
+                calendar_items = table[~table["Due"].isnull()]
+                for _, item in calendar_items.iterrows():
+                    date_key = "Date" if "Date" in table.columns else "Due"
+                    name_key = "Assignment" if "Assignment" in table.columns else "Due"
+                    date = item[date_key]
+                    if date_key == "Due":
+                        date = " ".join(date.split(" ")[1:])
+                    if date:
+                        parsed_date = dateutil.parser.parse(date)
+                        parsed_name = self.course.assignment_name(item[name_key])
+                        yield parsed_name, parsed_date
 
     def should_check(self):
         return self.course.name in config.website
