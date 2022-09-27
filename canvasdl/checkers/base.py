@@ -55,15 +55,11 @@ class Checker:
         self.after_check()
 
     def check_new_items(self):
-        items = self.get_items()
-        try:
-            items = set(items)
-        except TypeError:
-            pass  # dict items cannot be hashed to create set
-        items = [self.make_item(it) for it in items]
-        items = [it for it in items if self.is_new(it)]
-        if items:
-            self.process_new_items(items)
+        items = [self.make_item(it) for it in self.get_items()]
+        item_mapper = {it.save_id: it for it in items if self.is_new(it)}
+        unique_items = list(item_mapper.values())
+        if unique_items:
+            self.process_new_items(unique_items)
 
     def is_new(self, item: SaveItem):
         return item.save_id not in self.old_content

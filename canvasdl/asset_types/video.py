@@ -11,7 +11,7 @@ class ViewUrls:
     EmbedUrl: str | None
     ShareSettingsUrl: str | None
     DownloadUrl: str | None
-    CaptionDownloadUrl: str
+    CaptionDownloadUrl: str | None
     EditorUrl: str | None
     ThumbnailUrl: str
 
