@@ -56,7 +56,11 @@ class Checker:
 
     def check_new_items(self):
         items = self.get_items()
-        items = [self.make_item(it) for it in set(items)]
+        try:
+            items = set(items)
+        except TypeError:
+            pass  # dict items cannot be hashed to create set
+        items = [self.make_item(it) for it in items]
         items = [it for it in items if self.is_new(it)]
         if items:
             self.process_new_items(items)
