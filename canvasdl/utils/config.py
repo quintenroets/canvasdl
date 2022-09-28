@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass, field
 from typing import Dict
 
@@ -9,7 +10,6 @@ from canvasdl.utils.path import Path
 @dataclass
 class Config:
     API_URL: str
-    uni: str
     one_course_nr: int = None
     update_content: bool = True
     save_content: bool = True
@@ -23,3 +23,7 @@ class Config:
     @classmethod
     def load(cls):
         return Config(**Path.config.yaml)
+
+    @property
+    def uni(self):
+        return os.environ["school_email"].split("@")[0]

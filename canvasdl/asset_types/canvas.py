@@ -176,13 +176,13 @@ class Announcement(Asset, SaveItem):
     group_topic_children: Any
     context_code: str
     locked_for_user: bool
-    lock_info: Any
-    lock_explanation: Any
     message: str
     subscription_hold: Any
     todo_date: None
     delayed_post_at_date: datetime = None
 
+    lock_info: Any = None
+    lock_explanation: Any = None
     save_folder: Path = None
 
     def save(self):
@@ -192,8 +192,9 @@ class Announcement(Asset, SaveItem):
         }
         save_path.mtime = time.parse_time(self.created_at)
 
+    @property
     def save_id(self):
-        return ""
+        return self.id
 
     @property
     def display_title(self):

@@ -42,7 +42,6 @@ class Progress(ProgressBar):
             time.sleep(0.005)
 
     def add_progress(self, value):
-        print(value)
         self.progress += value
 
     @property
