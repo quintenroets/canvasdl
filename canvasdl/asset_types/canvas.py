@@ -8,7 +8,7 @@ import downloader
 from canvasdl import client
 from canvasdl.utils.time import parse_time
 
-from ..utils import Path, time, zip
+from ..utils import Path, time
 from . import base
 from .base import SaveItem
 
@@ -83,8 +83,7 @@ class File(Item):
         downloader.download(self.url, path)
         path.tag = 0
         path.mtime = self.mtime
-        if path.suffix == ".zip":
-            zip.unzip(path)
+        path.check_zip()
         self.folder.set_time(self.root)
 
     @property

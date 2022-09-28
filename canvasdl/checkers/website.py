@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from plib import Path
 
 from ..asset_types import Due, SaveItem
-from ..utils import config, zip
+from ..utils import config
 from . import base
 
 
@@ -31,15 +31,15 @@ class Url(SaveItem):
         return self.folder / self.relative_url
 
     def save(self):
-        if self.local_file.suffix == ".html":
+        dest = self.local_file
+        if dest.suffix == ".html":
             self.folder /= "Homepage"
             base_tag = f"<base href='{self.root_url}'>"
-            self.local_file.text = base_tag + requests.get(self.url).text
+            dest.text = base_tag + requests.get(self.url).text
         else:
-            downloader.download(self.url, self.local_file)
-        self.local_file.tag = 0
-        if self.local_file.suffix == ".zip":
-            zip.unzip(self.local_file)
+            downloader.download(self.url, dest)
+        dest.tag = 0
+        dest.check_zip()
 
     @property
     def display_title(self):
