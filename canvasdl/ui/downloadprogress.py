@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
 import cli
-from school.ui.widget import Widget
+from .widget import Widget
 
 if TYPE_CHECKING:
     from ..asset_types import Section
