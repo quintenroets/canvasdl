@@ -32,9 +32,7 @@ class Checker(announ.Checker, tab.Checker):
     def get_items(self) -> List[Any]:
         self.prepare_api()
         items = [*self.get_thread_items(), *self.get_unpinned_items()]
-        items = list({item["id"]: item for item in items}.values())
-        for it in items:
-            pprint(it["title"])
+        items = self.get_new_items(items)
         return items
 
     def get_thread_items(self, start_offset=0):

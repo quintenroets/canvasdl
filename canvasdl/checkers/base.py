@@ -56,10 +56,14 @@ class Checker:
 
     def check_new_items(self):
         items = [self.make_item(it) for it in self.get_items()]
+        items = self.get_new_items(items)
+        if items:
+            self.process_new_items(items)
+
+    def get_new_items(self, items):
         item_mapper = {it.save_id: it for it in items if self.is_new(it)}
         unique_items = list(item_mapper.values())
-        if unique_items:
-            self.process_new_items(unique_items)
+        return unique_items
 
     def is_new(self, item: SaveItem):
         return item.save_id not in self.old_content
