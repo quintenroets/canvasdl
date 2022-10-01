@@ -1,5 +1,9 @@
+import urllib
+import urllib.parse
 from dataclasses import dataclass
 from typing import Any
+
+import cli
 
 from ..utils import Path, time
 from . import base
@@ -69,6 +73,10 @@ class SavedVideo(base.Item):
     duration: float
 
     @property
+    def id(self):
+        return self.url.split("?id=")[1]
+
+    @property
     def tag(self):
         mtime = time.export_mtime(self.mtime)
         tag = (
@@ -96,3 +104,41 @@ class SavedVideo(base.Item):
             duration_string = hours_str + ":" + duration_string
 
         return duration_string
+
+    def download(self, info, folder: Path):
+        folder /= self.id
+        streams = info["Delivery"]["Streams"]
+        for i, stream in enumerate(streams):
+            url = stream["StreamUrl"]
+            dest = folder / f"{i}.mp4"
+            if not dest.exists():
+                cli.run("youtube-dl", url, {"output": dest})
+                dest.mtime = self.mtime
+        folder.mtime = self.mtime
+
+    def export_html(self, folder: Path):
+        download_folder = folder / self.id
+        sources = list(download_folder.iterdir())
+        sources = sorted(sources, key=lambda path: path.size, reverse=True)[:2]
+        template_path = Path.template1 if len(sources) == 1 else Path.template2
+        content = template_path.text
+        content = content.replace("**TITLE**", self.title)
+        replacements = {
+            "SOURCENAME": sources[0],
+            "SOURCENAME1": sources[0],
+            "SOURCENAME2": sources[-1],
+            "TEMPLATES": Path.templates,
+        }
+        for k, v in replacements.items():
+            content = content.replace(f"**{k}**", v.as_uri())
+
+        export_filename = (
+            folder.parent.parent
+            / "video_htmls"
+            / folder.name
+            / self.id
+            / self.title.replace("/", "_")
+        ).with_suffix(".html")
+
+        export_filename.text = content
+        sources[0].copy_properties_to(export_filename)

@@ -1,0 +1,43 @@
+<head>
+	<link href="https://vjs.zencdn.net/7.8.2/video-js.css" rel="stylesheet" />
+	<link href="**TEMPLATES**/style.css" rel="stylesheet" />
+</head>
+
+<!-- <h1>**TITLE**</h1> -->
+<body style="background-image: url('**TEMPLATES**/background.jpg')">
+    
+	<div class="wrapper">
+		<div class="videocontent" style="width: 35%;">
+			<video
+				class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid"
+				preload = "auto"
+				controls
+				data-setup="{}"
+				>
+				<source src="**SOURCENAME1**" type="video/mp4" />
+			</video>
+		</div>
+		
+		
+
+        <div class="videocontent" style="width: 65%;">
+            <video
+                class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid"
+                preload = "auto"
+                controls
+                data-setup="{}"
+                >
+                <source src="**SOURCENAME2**" type="video/mp4" />
+            </video>
+        </div>
+	</div>
+
+	<script src="https://vjs.zencdn.net/7.8.2/video.js"></script>
+	<script src="**TEMPLATES**/script.js"></script>
+</body>
+
+<style>
+div.wrapper {
+    max-width: 2620;
+	}
+</style>

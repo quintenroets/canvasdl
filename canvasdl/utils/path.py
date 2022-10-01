@@ -12,6 +12,8 @@ class Path(plib.Path):
     courses = assets / "courses" / "courses.yaml"
 
     school = plib.Path.docs / "School"
+    template1 = templates / "video.html"
+    template2 = templates / "video2.html"
 
     @classmethod
     def content_path(cls, course, names=[]):
