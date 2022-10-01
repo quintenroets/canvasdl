@@ -77,6 +77,8 @@ class Assignment(Asset, SaveItem):
     allowed_extensions: Any = None
     quiz_id: int = None
     anonymous_submissions: bool = False
+    lock_explanation: Any = None
+    lock_info: Any = None
 
     course: Course = None
 
