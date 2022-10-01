@@ -75,9 +75,9 @@ class Checker:
         for item in download_items:
             item.save()
 
+        self.export_downloads()
         if config.save_content:
             self.save_new_content(items)
-        self.export_downloads()
         download_progress.enable_show()
 
     def save_new_content(self, items: List[SaveItem]):
