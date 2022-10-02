@@ -1,9 +1,8 @@
-import urllib
-import urllib.parse
 from dataclasses import dataclass
 from typing import Any
 
-import cli
+import downloader
+import m3u8
 
 from ..utils import Path, time
 from . import base
@@ -71,6 +70,7 @@ class SavedVideo(base.Item):
     mtime: float
     url: str
     duration: float
+    local_url: Path | None = None
 
     @property
     def id(self):
@@ -80,7 +80,7 @@ class SavedVideo(base.Item):
     def tag(self):
         mtime = time.export_mtime(self.mtime)
         tag = (
-            f"<h2><button>Toggle</button><a href='{self.url}' style='text-decoration: none' target = '_blanck'>"
+            f"<h2><a href='{self.local_url.as_uri()}' style='text-decoration: none' target = '_blanck'>"
             f"&ensp;{self.title}<small>&ensp;({self.duration_string})&ensp;[{mtime}]</small></a></h2><hr>"
         )
         return tag
@@ -110,9 +110,13 @@ class SavedVideo(base.Item):
         streams = info["Delivery"]["Streams"]
         for i, stream in enumerate(streams):
             url = stream["StreamUrl"]
-            dest = folder / f"{i}.mp4"
+            stream_id = stream["PublicID"]
+            dest = folder / f"{stream_id}.mp4"
             if not dest.exists():
-                cli.run("youtube-dl", url, {"output": dest})
+                if "m3u8" in url:
+                    self.download_m3u8(url, dest)
+                else:
+                    downloader.download(url, dest)
                 dest.mtime = self.mtime
         folder.mtime = self.mtime
 
@@ -132,7 +136,12 @@ class SavedVideo(base.Item):
         for k, v in replacements.items():
             content = content.replace(f"**{k}**", v.as_uri())
 
-        export_filename = (
+        self.set_folder(folder)
+        self.local_url.text = content
+        sources[0].copy_properties_to(self.local_url)
+
+    def set_folder(self, folder):
+        self.local_url = (
             folder.parent.parent
             / "video_htmls"
             / folder.name
@@ -140,5 +149,10 @@ class SavedVideo(base.Item):
             / self.title.replace("/", "_")
         ).with_suffix(".html")
 
-        export_filename.text = content
-        sources[0].copy_properties_to(export_filename)
+    @classmethod
+    def download_m3u8(cls, url, dest, headers=None):
+        headers = headers or {}
+        playlist = m3u8.load(url, headers=headers)
+        playlist = m3u8.load(playlist.playlists[0].absolute_uri, headers=headers)
+        url = playlist.segments[0].absolute_uri
+        downloader.download(url, dest)
