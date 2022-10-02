@@ -116,38 +116,25 @@ class Checker(tab.Checker):
         video.download(info, self.download_folder)
         video.export_html(self.download_folder)
 
-    def get_saved_videos(self):
-        paths = sorted(
-            list(self.save_folder.iterdir()), key=lambda path: int(path.mtime)
-        )
+    def get_saved_videos(self, folder=None):
+        if folder is None:
+            folder = self.save_folder
+        paths = sorted(list(folder.iterdir()), key=lambda path: int(path.mtime))
         for path in paths:
-            yield SavedVideo.from_dict(path.yaml)
+            video = SavedVideo.from_dict(path.yaml)
+            video.set_folder(folder)
+            yield video
 
     def create_video_tags(self):
-        videos = list(self.get_saved_videos())
-        for v in videos:
-            v.url = (
-                (
-                    self.save_folder.parent.parent
-                    / "video_htmls"
-                    / self.save_folder.name
-                    / v.id
-                    / v.title.replace("/", "_")
-                )
-                .with_suffix(".html")
-                .as_uri()
-            )
+        videos = self.get_saved_videos()
         return "".join(v.tag for v in videos)
 
     def create_all_video_tags(self):
-        paths = sorted(
-            [
-                path
-                for folder in self.save_folder.parent.iterdir()
-                for path in list(folder.iterdir())
-            ],
-            key=lambda path: int(path.mtime),
-        )
-        videos = [SavedVideo.from_dict(path.yaml) for path in paths]
+        videos = [
+            video
+            for folder in self.save_folder.parent.iterdir()
+            for video in self.get_saved_videos(folder)
+        ]
+        videos = sorted(videos, key=lambda v: v.mtime)
         video_tags = "".join(v.tag for v in videos)
         return video_tags
