@@ -19,7 +19,7 @@ class Course(Item):
 
     @property
     def abbreviation(self):
-        removes = ("Topics in", "Introduction to")
+        removes = ("Topics in", "Introduction to", "and")
         name = self.name
         for r in removes:
             name = name.replace(r, "")
