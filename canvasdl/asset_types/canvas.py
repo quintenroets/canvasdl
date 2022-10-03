@@ -52,6 +52,7 @@ class File(Item):
     modified_at_date: datetime
     mime_class: str
     media_entry_id: None
+    category: str|None = None
     root: Path = None
 
     @property
