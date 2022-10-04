@@ -14,12 +14,10 @@ class Checker(base.Checker, announ.Checker):
     check_time: str = ""
 
     def load_saved_content(self):
+        super().load_saved_content()
         self.last_check_time = (
             self.content_path.text or (datetime.now() - timedelta(days=365)).isoformat()
         )
-
-    def is_new(self, item: Announcement):
-        return True
 
     def make_item(self, item):
         item = Announcement.from_response(item)
