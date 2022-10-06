@@ -15,5 +15,8 @@ class Checker(base.Checker):
         return self.course.name in config.drive
 
     def check_new_content(self):
+        local_path = self.path / "Drive"
         drive_name = config.drive[self.course.name]
-        cli.run("rclone", "sync", f"{drive_name}:", self.path / "Drive")
+        remote_path = f"{drive_name}:"
+        options = {"drive-export-formats": "pdf"}
+        cli.run("rclone", "sync", options, remote_path, local_path)
