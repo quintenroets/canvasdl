@@ -5,6 +5,7 @@ root = plib.Path(__file__).parent.parent
 
 class Path(plib.Path):
     templates = root.parent / "assets" / "templates"
+    announ_css = templates / "announ.css"
     assets: plib.Path = plib.Path.assets / root.name
     content_assets = assets / "content"
     config = assets / "config.yaml"
@@ -12,8 +13,6 @@ class Path(plib.Path):
     courses = assets / "courses" / "courses.yaml"
 
     school = plib.Path.docs / "School"
-    template1 = templates / "video.html"
-    template2 = templates / "video2.html"
 
     @classmethod
     def content_path(cls, course, names=[]):

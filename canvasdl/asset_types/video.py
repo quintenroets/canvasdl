@@ -77,41 +77,18 @@ class SavedVideo(base.Item):
         return self.url.split("?id=")[1]
 
     @property
-    def tag(self):
-        mtime = time.export_mtime(self.mtime)
-        tag = (
-            f"<h2><a href='{self.local_url.as_uri()}' style='text-decoration: none' target = '_blanck'>"
-            f"&ensp;{self.title}<small>&ensp;({self.duration_string})&ensp;[{mtime}]</small></a></h2><hr>"
-        )
-        return tag
-
-    @property
-    def duration_string(self):
-        # durations are in float format
-        seconds = int(float(self.duration))
-
-        hours, seconds = divmod(seconds, 3600)
-        minutes, seconds = divmod(seconds, 60)
-
-        hours_str = str(int(hours))
-        minutes_str = str(minutes)
-        if hours:
-            minutes_str = minutes_str.zfill(2)
-        seconds_str = str(seconds).zfill(2)
-
-        duration_string = minutes_str + ":" + seconds_str
-        if hours:
-            duration_string = hours_str + ":" + duration_string
-
-        return duration_string
+    def filename_title(self):
+        return self.title.replace("/", "_")
 
     def download(self, info, folder: Path):
         folder /= self.id
         streams = info["Delivery"]["Streams"]
         for i, stream in enumerate(streams):
             url = stream["StreamUrl"]
-            stream_id = stream["PublicID"]
-            dest = folder / f"{stream_id}.mp4"
+            name = self.filename_title
+            if i > 0:
+                name += f"__VIEW__{i+1}"
+            dest = (folder / name).with_suffix(".mp4")
             if not dest.exists():
                 if "m3u8" in url:
                     self.download_m3u8(url, dest)
@@ -119,35 +96,6 @@ class SavedVideo(base.Item):
                     downloader.download(url, dest)
                 dest.mtime = self.mtime
         folder.mtime = self.mtime
-
-    def export_html(self, folder: Path):
-        download_folder = folder / self.id
-        sources = list(download_folder.iterdir())
-        sources = sorted(sources, key=lambda path: path.size, reverse=True)[:2]
-        template_path = Path.template1 if len(sources) == 1 else Path.template2
-        content = template_path.text
-        content = content.replace("**TITLE**", self.title)
-        replacements = {
-            "SOURCENAME": sources[0],
-            "SOURCENAME1": sources[0],
-            "SOURCENAME2": sources[-1],
-            "TEMPLATES": Path.templates,
-        }
-        for k, v in replacements.items():
-            content = content.replace(f"**{k}**", v.as_uri())
-
-        self.set_folder(folder)
-        self.local_url.text = content
-        sources[0].copy_properties_to(self.local_url)
-
-    def set_folder(self, folder):
-        self.local_url = (
-            folder.parent.parent
-            / "video_htmls"
-            / folder.name
-            / self.id
-            / self.title.replace("/", "_")
-        ).with_suffix(".html")
 
     @classmethod
     def download_m3u8(cls, url, dest, headers=None):

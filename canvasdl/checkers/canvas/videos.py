@@ -1,6 +1,7 @@
 from functools import cached_property
 
 import requests
+import video_exporter
 
 from canvasdl.utils import Path
 
@@ -80,20 +81,12 @@ class Checker(tab.Checker):
         self.export_html_files()
 
     def export_html_files(self):
-        folder = Path.templates.as_uri()
-        css = f'<link href="{folder}/video_index.css" rel="stylesheet" />\n'
-        js = f'<script src="{folder}/index_script.js"></script>\n'
-
         exports = {
-            self.path: self.create_video_tags,
-            Path.school / "Videos.html": self.create_all_video_tags,
+            self.path: self.download_folder,
+            Path.school / "Videos.html": list(self.download_folder.parent.iterdir()),
         }
-        for path, tag_create_function in exports.items():
-            video_tags = tag_create_function()
-            body = f"<body style=\"background-image: url('{folder}/background_index.jpg')\">{video_tags}</body>"
-            content = css + js + body
-            path.text = content
-            path.tag = 9999
+        for dest, video_folders in exports.items():
+            video_exporter.export(video_folders, dest, merge_folders=True)
 
     @property
     def download_folder(self):
@@ -102,39 +95,16 @@ class Checker(tab.Checker):
         )
 
     def download_recordings(self):
-        for video in self.get_saved_videos():
+        for path in self.save_folder.iterdir():
+            video = SavedVideo.from_dict(path.yaml)
             self.download_streams(video)
 
+    def get_api(self, data):
+        post_url = (
+            "https://cvn.hosted.panopto.com/Panopto/Pages/Viewer/DeliveryInfo.aspx"
+        )
+        return self.authenticated_session.post(post_url, data=data).json()
+
     def download_streams(self, video: SavedVideo):
-        def get_api(data):
-            post_url = (
-                "https://cvn.hosted.panopto.com/Panopto/Pages/Viewer/DeliveryInfo.aspx"
-            )
-            return self.authenticated_session.post(post_url, data=data).json()
-
-        info = get_api({"deliveryId": video.id, "responseType": "json"})
+        info = self.get_api({"deliveryId": video.id, "responseType": "json"})
         video.download(info, self.download_folder)
-        video.export_html(self.download_folder)
-
-    def get_saved_videos(self, folder=None):
-        if folder is None:
-            folder = self.save_folder
-        paths = sorted(list(folder.iterdir()), key=lambda path: int(path.mtime))
-        for path in paths:
-            video = SavedVideo.from_dict(path.yaml)
-            video.set_folder(folder)
-            yield video
-
-    def create_video_tags(self):
-        videos = self.get_saved_videos()
-        return "".join(v.tag for v in videos)
-
-    def create_all_video_tags(self):
-        videos = [
-            video
-            for folder in self.save_folder.parent.iterdir()
-            for video in self.get_saved_videos(folder)
-        ]
-        videos = sorted(videos, key=lambda v: v.mtime)
-        video_tags = "".join(v.tag for v in videos)
-        return video_tags
