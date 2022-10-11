@@ -20,7 +20,8 @@ class Checker(base.Checker, ABC):
         return super().path / "Announcements.html"
 
     def export_downloads(self):
-        style = f'<link href="file:///{Path.templates}/announ.css" rel="stylesheet" />'
+        href = Path.announ_css.as_uri()
+        style = f'<link href="{href}" rel="stylesheet" />'
         base_tag = f'<base href="{config.API_URL}">'
         title = f"<br><h1>{self.course.name}</h1><hr>"
         html, last_announ_time = self.load_announs()
