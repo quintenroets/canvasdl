@@ -1,9 +1,11 @@
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from gcsa.google_calendar import Event, GoogleCalendar
 
 from .path import Path
+
+DAY = timedelta(days=1)
 
 
 def add_todo(message, date):
