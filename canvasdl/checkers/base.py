@@ -70,14 +70,19 @@ class Checker:
 
     def process_new_items(self, items: List[SaveItem]):
         download_items = [it for it in items if it.should_download()]
-        section = Section(self.path, self.course, download_items)
+        if download_items:
+            self.download_new_items(download_items)
+
+        if config.save_content:
+            self.save_new_content(items)
+
+    def download_new_items(self, item: List[SaveItem]):
+        section = Section(self.path, self.course, items)
         download_progress = DownloadProgress(section)
-        for item in download_items:
+        for item in items:
             item.save()
 
         self.export_downloads()
-        if config.save_content:
-            self.save_new_content(items)
         download_progress.enable_show()
 
     def save_new_content(self, items: List[SaveItem]):
