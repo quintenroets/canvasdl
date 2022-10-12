@@ -21,7 +21,7 @@ setup(
     packages=find_packages(),
     setup_requires=read("setup_requirements.txt"),
     install_requires=read("requirements.txt"),
-    package_data={"canvasdl": ["templates/*"]},
+    package_data={"canvasdl": ["assets/**"]},
     entry_points={
         "console_scripts": [
             "canvasdl = canvasdl:main",

@@ -10,7 +10,7 @@ class Item:
     def from_dict(cls, data):
         if isinstance(data, list):
             data = {"items": data}
-        return dacite.from_dict(cls, data, config=dacite.Config(strict=True))
+        return dacite.from_dict(cls, data) 
 
     @classmethod
     def from_bytes(cls, data):

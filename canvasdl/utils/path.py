@@ -4,7 +4,7 @@ root = plib.Path(__file__).parent.parent
 
 
 class Path(plib.Path):
-    templates = root.parent / "assets" / "templates"
+    templates = root / "assets" / "templates"
     announ_css = templates / "announ.css"
     assets: plib.Path = plib.Path.assets / root.name
     content_assets = assets / "content"
