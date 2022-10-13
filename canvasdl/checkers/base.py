@@ -76,7 +76,7 @@ class Checker:
         if config.save_content:
             self.save_new_content(items)
 
-    def download_new_items(self, item: List[SaveItem]):
+    def download_new_items(self, items: List[SaveItem]):
         section = Section(self.path, self.course, items)
         download_progress = DownloadProgress(section)
         for item in items:
