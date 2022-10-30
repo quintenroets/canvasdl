@@ -4,8 +4,8 @@ from dataclasses import dataclass
 import dateutil.parser
 import pandas as pd
 
-from .canvas import assignment, tab
 from ..asset_types import Due
+from .canvas import assignment, tab
 
 
 @dataclass
@@ -18,10 +18,12 @@ class Checker(assignment.Checker, tab.Checker):
         page = self.get_redirected_content()
         with io.StringIO(page) as fp:
             table = pd.read_html(fp)[0]
+        table = table[~table["ReleasedDue (EDT)"].isnull()]
         content = [
             (self.course.assignment_name(row["Name"]), row["ReleasedDue (EDT)"])
             for i, row in table.iterrows()
         ]
+
         return content
 
     def make_item(self, item):
