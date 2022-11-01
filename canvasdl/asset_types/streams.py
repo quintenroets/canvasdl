@@ -95,7 +95,8 @@ class Streams(base.Item):
             stream_info = stream.dict() | dict(streams=self, index=i)
             stream = DownloadStream.from_dict(stream_info)
             stream.download()
-        self.folder.mtime = self.mtime
+        if self.folder.exists():
+            self.folder.mtime = self.mtime
 
 
 def download_m3u8(url: str, dest: Path, headers=None):
