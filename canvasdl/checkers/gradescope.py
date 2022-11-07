@@ -14,16 +14,27 @@ class Checker(assignment.Checker, tab.Checker):
     def tab_name(cls):
         return "Gradescope"
 
-    def get_items(self):
+    @classmethod
+    def clean_table(cls, table: pd.DataFrame) -> pd.DataFrame:
+        new_column_names = {n: n.split(" (")[0] for n in table.columns}
+        table = table.rename(columns=new_column_names)
+        table = table[~table["ReleasedDue"].isnull()]
+        return table
+
+    def get_content_table(self) -> pd.DataFrame:
         page = self.get_redirected_content()
         with io.StringIO(page) as fp:
-            table = pd.read_html(fp)[0]
-        table = table[~table["ReleasedDue (EDT)"].isnull()]
-        content = [
-            (self.course.assignment_name(row["Name"]), row["ReleasedDue (EDT)"])
-            for i, row in table.iterrows()
-        ]
+            return pd.read_html(fp)[0]
 
+    def extract_row_info(self, row):
+        name = self.course.assignment_name(row["Name"])
+        date = row["ReleasedDue"]
+        return name, date
+
+    def get_items(self):
+        table = self.get_content_table()
+        table = self.clean_table(table)
+        content = [self.extract_row_info(row) for _, row in table.iterrows()]
         return content
 
     def make_item(self, item):
