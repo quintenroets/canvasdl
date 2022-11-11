@@ -45,7 +45,7 @@ class Checker(assignment.Checker, tab.Checker):
 def parse_date(date_str):
     end = "Late Due Date: "
     if end in date_str:
-        date_str = date_str.split(end)[0]
+        date_str = date_str.split(end)[0].strip()
 
     start_pos = date_str.rfind("M", 0, -1)
     date_str = date_str[start_pos + 1 :]
