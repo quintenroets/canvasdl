@@ -1,8 +1,8 @@
-import os
 from datetime import datetime, timedelta
 
 from gcsa.google_calendar import Event, GoogleCalendar
 
+from .config import config
 from .path import Path
 
 DAY = timedelta(days=1)
@@ -14,8 +14,8 @@ def add_todo(message, date):
 
 
 def add_event(message, start, end):
-    email = os.environ["email"]
-    calendar = GoogleCalendar(email, credentials_path=Path.calendar_credentials)
+    args = (config.google_calendar_id,) if config.google_calendar_id else ()
+    calendar = GoogleCalendar(*args, credentials_path=Path.calendar_credentials)
     existing_same_events = list(
         calendar.get_events(time_min=start, time_max=start + DAY, query=message)
     )

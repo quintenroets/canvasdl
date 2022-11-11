@@ -1,4 +1,4 @@
-from .config import Config
+from .config import Config, config
 from .path import Path
 
-config = Config.load()
+__all__ = ["config", "Config", "Path"]
