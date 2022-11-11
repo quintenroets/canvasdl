@@ -52,7 +52,7 @@ class File(Item):
     modified_at_date: datetime
     mime_class: str
     media_entry_id: None
-    category: str|None = None
+    category: str | None = None
     root: Path = None
 
     @property
@@ -84,7 +84,7 @@ class File(Item):
         downloader.download(self.url, path)
         path.tag = 0
         path.mtime = self.mtime
-        path.check_zip()
+        path.unpack_if_archive()
         self.folder.set_time(self.root)
 
     @property

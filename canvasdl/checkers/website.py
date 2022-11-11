@@ -39,7 +39,7 @@ class Url(SaveItem):
         else:
             downloader.download(self.url, dest)
         dest.tag = 0
-        dest.check_zip()
+        dest.unpack_if_archive()
 
     @property
     def display_title(self):
@@ -84,8 +84,7 @@ class Checker(base.Checker):
     def get_url_items(self, url):
         html_content = requests.get(url).content
         for extractor in (self.get_calendar_items, self.get_content_items):
-            for item in extractor(html_content):
-                yield item
+            yield from extractor(html_content)
 
     def get_content_items(self, html_content):
         soup = BeautifulSoup(html_content, features="lxml")
