@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 
 from gcsa.google_calendar import Event, GoogleCalendar
 
@@ -14,6 +14,13 @@ def add_todo(message, date):
 
 
 def add_event(message, start, end):
+    start_time = start.time()
+    full_day = start_time in (time(hour=23, minute=59), time(hour=0, minute=0))
+    if full_day:
+        # start quarter before midnight
+        subtract_minutes = 15 if start_time.minute == 0 else 14
+        start -= timedelta(hours=0, minutes=subtract_minutes)
+
     args = (config.google_calendar_id,) if config.google_calendar_id else ()
     calendar = GoogleCalendar(*args, credentials_path=Path.calendar_credentials)
     existing_same_events = list(
