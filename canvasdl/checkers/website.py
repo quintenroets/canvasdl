@@ -111,11 +111,11 @@ class Checker(base.Checker):
                     if date_key == "Due":
                         date = " ".join(date.split(" ")[1:])
                     if date:
-                        parsed_date = dateutil.parser.parse(date) + timedelta(
-                            hours=23, minutes=30
-                        )
+                        date = date.replace("Tues", "Tue")
+                        parsed_date = dateutil.parser.parse(date)
+                        due_time = parsed_date + timedelta(hours=23, minutes=30)
                         parsed_name = self.course.assignment_name(item[name_key])
-                        yield parsed_name, parsed_date
+                        yield parsed_name, due_time
 
     def should_check(self):
         return self.course.name in config.website
