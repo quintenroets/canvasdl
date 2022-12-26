@@ -39,7 +39,8 @@ class Checker(tab.Checker):
 
         url = f"{self.api_url}folders/{folder_id}/sessions"
         params = {"sortfield": "CreatedDate", "sortOrder": "Desc"}
-        # pageNumber, https://demo.hosted.panopto.com/Panopto/api/docs/index.html#/Folders/Folders_GetSessions
+        # pageNumber, https://demo.hosted.panopto.com/Panopto/api/docs
+        # /index.html#/Folders/Folders_GetSessions
         content = session.get(url, params=params).json()["Results"]
         return content
 
@@ -64,7 +65,8 @@ class Checker(tab.Checker):
 
         cookie_name = f"CVNCanvas\\{config.uni}"
         cookie_value = (
-            '{"lastSessionView":1,"sortData-lastSessionWithSearchSort":"{"column":3,"currentAscending":false}",'
+            '{"lastSessionView":1,"sortData-lastSessionWithSearchSort":'
+            '"{"column":3,"currentAscending":false}",'
             '"sortData-lastSessionSort":"{"column":1,"currentAscending":false}"}]'
         )
 

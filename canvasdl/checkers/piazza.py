@@ -6,19 +6,18 @@ import cli
 from piazza_api import Piazza
 
 from ..asset_types.piazza import Announcement
-from ..utils import config
 from . import announ
 
 
 @dataclass
 class Checker(announ.Checker):
-    def should_check(self):
-        return self.course.name in config.piazza
+    def should_check(self) -> bool:
+        return bool(self.course.piazza_id)
 
     @cached_property
     def api(self):
         api = get_api()
-        network_id = config.piazza[self.course.name]
+        network_id = self.course.piazza_id
         api = api.network(network_id)
         return api
 

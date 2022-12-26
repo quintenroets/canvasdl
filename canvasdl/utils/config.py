@@ -11,6 +11,7 @@ from . import argparser, configmaker
 @dataclass
 class Config:
     API_URL: str
+    API_KEY: str = None
     one_course_nr: int = None
     update_content: bool = True
     save_content: bool = True

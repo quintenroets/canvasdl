@@ -13,7 +13,6 @@ from bs4 import BeautifulSoup
 from plib import Path
 
 from ..asset_types import Due, SaveItem
-from ..utils import config
 from . import base
 
 
@@ -60,7 +59,7 @@ class Checker(base.Checker):
         )
 
     def get_urls(self):
-        return config.website[self.course.name]
+        return self.course.websites
 
     @cached_property
     def url(self):
@@ -117,27 +116,27 @@ class Checker(base.Checker):
                         parsed_name = self.course.assignment_name(item[name_key])
                         yield parsed_name, due_time
 
-    def should_check(self):
-        return self.course.name in config.website
+    def should_check(self) -> bool:
+        return bool(self.course.websites)
 
     def check_new_items(self):
-        self.save(config.website[self.course.name])
+        self.save_website()
         super().check_new_items()
 
-    def save(self, url, offline=False):
+    def save_website(self, offline=False):
         if offline:
-            self.save_offline(url)
+            self.save_offline()
         else:
-            self.save_online(url)
+            self.save_online()
 
-    def save_offline(self, url):
+    def save_offline(self):
         folder = self.path.with_suffix("")
-        pywebcopy.save_webpage(url, str(folder.parent), project_name=folder.name)
+        pywebcopy.save_webpage(self.url, str(folder.parent), project_name=folder.name)
         index_path = next(folder.rglob("index.html"))
         index_path_symlink = self.path
         index_path_symlink.symlink_to(index_path)
 
-    def save_online(self, url):
+    def save_online(self):
         if not self.path.exists():
-            self.path.text = f"<script>location.href = '{url}'</script>"
+            self.path.text = f"<script>location.href = '{self.url}'</script>"
             self.path.tag = 9999

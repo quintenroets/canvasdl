@@ -1,5 +1,4 @@
-from dataclasses import dataclass
-from typing import List
+from dataclasses import dataclass, field
 
 from canvasdl.utils.path import Path
 
@@ -12,6 +11,9 @@ class Course(Item):
     name: str
     id: str
     video_id: str = None
+    drive_name: str = None
+    piazza_id: str = None
+    websites: dict = field(default_factory=dict)
 
     @property
     def sort_index(self):
@@ -31,7 +33,7 @@ class Course(Item):
 
 @dataclass
 class Courses:
-    courses: List[Course]
+    courses: list[Course]
 
     @classmethod
     def from_dict(cls, courses):
