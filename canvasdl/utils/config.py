@@ -5,6 +5,8 @@ import cli
 
 from canvasdl.utils.path import Path
 
+from . import argparser, configmaker
+
 
 @dataclass
 class Config:
@@ -22,7 +24,11 @@ class Config:
 
     @classmethod
     def load(cls):
-        return Config(**Path.config.yaml)
+        config_path = Path.config
+        args = argparser.get_args()
+        if not config_path.exists() or args.configure:
+            configmaker.make_config()
+        return Config(**config_path.yaml)
 
     @property
     def uni(self):

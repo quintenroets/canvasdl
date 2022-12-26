@@ -9,6 +9,7 @@ class Path(plib.Path):
     assets: plib.Path = plib.Path.assets / root.name
     content_assets = assets / "content"
     config = assets / "config.yaml"
+    config_temp = assets / "config_temp.yaml"
     calendar_credentials = assets / "credentials.json"
     courses = assets / "courses" / "courses.yaml"
 
