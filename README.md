@@ -30,20 +30,25 @@ This convenient package:
     ```shell
     pip install git+https://github.com/quintenroets/canvasdl
     ```
-2) Give the courses you want to synchronize a nickname on courseworks. 
-   - This will be the name of their local folder with synchronized content
-3) Obtain API key
+2) Obtain Canvas API key
     - Columbia University students
       - Go to Courseworks > Account > Settings
       - Click on "New Access Token"
     - [General instructions](https://community.canvaslms.com/t4/Admin-Guide/How-do-I-add-a-developer-API-key-for-an-account/ta-p/259)
-4) Add API key to config file
-   - at $HOME/Scripts/assets/canvasdl/config.yaml
-5) Add Canvas url to config file
-   - For Columbia University students: https://courseworks2.columbia.edu
+
+3) [Optional] Obtain Google Calendar [API key](https://developers.google.com/calendar/api/quickstart/python#authorize_credentials_for_a_desktop_application)
+4) [Optional] Specify custom [Calendar ID](https://xfanatical.com/blog/how-to-find-your-google-calendar-id/)
+5) Configure your settings:
+   ```shell
+   canvasdl --configure
+   ```
+6) Install package for local file management
+   - python-xattr
+7) [Optional] Install package for UI progress during synchronization
+   - python-pyqt6
 
 ## Usage
-Run command to synchronize all content
+Run command to synchronize all content and check for updates
 ```shell
 canvasdl
 ```

@@ -29,7 +29,3 @@ setup(
         ]
     },
 )
-
-import cli  # noqa: autoimport
-
-cli.install(*read("packages.txt"))
