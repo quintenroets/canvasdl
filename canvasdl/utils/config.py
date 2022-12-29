@@ -1,4 +1,3 @@
-import os
 from dataclasses import dataclass, field
 
 from canvasdl.utils.path import Path
@@ -25,10 +24,6 @@ class Config:
         if not config_path.exists() or args.configure:
             configmaker.make_config()
         return Config(**config_path.yaml)
-
-    @property
-    def uni(self):
-        return os.environ["school_email"].split("@")[0]
 
 
 config = Config.load()

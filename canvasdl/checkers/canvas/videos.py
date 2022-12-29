@@ -6,7 +6,6 @@ import video_exporter
 from canvasdl.utils import Path
 
 from ...asset_types import SavedVideo, Video
-from ...utils import config
 from . import tab
 
 
@@ -62,20 +61,19 @@ class Checker(tab.Checker):
         launch_url = self.get_launch_url()
         launch_response = requests.get(launch_url).text
         url, data = self.parse_form(launch_response)
-
-        cookie_name = f"CVNCanvas\\{config.uni}"
-        cookie_value = (
-            '{"lastSessionView":1,"sortData-lastSessionWithSearchSort":'
-            '"{"column":3,"currentAscending":false}",'
-            '"sortData-lastSessionSort":"{"column":1,"currentAscending":false}"}]'
-        )
-
-        def authenticate(session):
-            session.post(url, data=data)
-            session.cookies[cookie_name] = cookie_value
-
         session = requests.Session()
-        authenticate(session)
+        session.post(url, data=data)
+
+        uni = data["lis_person_sourcedid"]
+        cookie = {
+            f"CVNCanvas\\{uni}": (
+                '{"lastSessionView":1,"sortData-lastSessionWithSearchSort":'
+                '"{"column":3,"currentAscending":false}",'
+                '"sortData-lastSessionSort":"{"column":1,"currentAscending":false}"}]'
+            )
+        }
+        session.cookies.update(cookie)
+
         return session
 
     def export_downloads(self):
