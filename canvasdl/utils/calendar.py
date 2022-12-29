@@ -1,6 +1,7 @@
 from datetime import datetime, time, timedelta
 
-from gcsa.google_calendar import Event, GoogleCalendar
+from gcsa.event import Event
+from gcsa.google_calendar import GoogleCalendar
 
 from .config import config
 from .path import Path
