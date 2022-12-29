@@ -1,12 +1,16 @@
 import threading
 import time
 
-from .popup import SilentUIHandle
 from .progressbar import ProgressBar
+from .silentpopup import SilentUIHandle
 
 
 class Progress(ProgressBar):
     def __init__(self, message="Checking for new items", silent=False):
+        try:
+            from .popup import UIHandle  # noqa: autoimport
+        except ModuleNotFoundError:
+            silent = True
         super().__init__(title="School", message=message, silent=silent)
         self.messages = [message]
         self.auto_max = 0.0
