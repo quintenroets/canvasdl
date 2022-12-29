@@ -46,6 +46,7 @@ This convenient package:
    - python-xattr
 7) [Optional] Install package for UI progress during synchronization
    - python-pyqt6
+   - pip install PyQt6
 
 ## Usage
 Run command to synchronize all content and check for updates

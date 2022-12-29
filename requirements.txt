@@ -1,6 +1,5 @@
 canvasapi
 python-dateutil
-PyQt6
 pywebcopy
 pandas
 beautifulsoup4
@@ -12,5 +11,3 @@ dacite
 downloader @ git+https://github.com/quintenroets/downloader
 libs @ git+https://github.com/quintenroets/libs
 superpathlib @ git+https://github.com/quintenroets/superpathlib
-
-
