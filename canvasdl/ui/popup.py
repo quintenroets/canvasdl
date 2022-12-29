@@ -2,20 +2,14 @@ import itertools
 
 import dbus
 
+from .silentpopup import SilentUIHandle
+
 session_bus = dbus.SessionBus()
 
 
 def get_dbus_interface(name, path, interface):
     obj = session_bus.get_object(name, path)
     return dbus.Interface(obj, dbus_interface=interface)
-
-
-class SilentUIHandle:
-    def __getattr__(self, name):
-        def method(*args, **kwargs):
-            pass
-
-        return method
 
 
 class UIHandle:
