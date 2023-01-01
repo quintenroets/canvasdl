@@ -51,27 +51,31 @@ def parse_courses(courses):
 
 def make_shortcuts(courses: list[Course]):
     try:
-        shortcut_maker = ShortcutMaker()
-        for i, course in enumerate(courses):
-            shortcut_name = course.name.replace(" ", "_").replace("'", "")
-            url = f"{config.API_URL}/courses/{course.id}"
-
-            shortcuts = {
-                f"checkpoint {shortcut_name}": f'control "c:{10 + i}"',
-                # 10, 11, 12 -> 1, 2, 3, ..
-                f"checkpoint choose {shortcut_name}": f'control shift "c:{10 + i}"',
-                # 67, 68, 69 -> F1, F2, F3, ..
-                f"xdg-open {url}": f'control "c:{67 + i}"',
-                "": "",
-            }
-
-            for target, hotkey in shortcuts.items():
-                shortcut_maker.add_shortcut(hotkey, target)
-
-        shortcut_maker.save_shortcuts()
-    except ImportError:
+        _make_shortcuts(courses)
+    except (ImportError, FileNotFoundError):
         # disable on non-personal machines
         pass
+
+
+def _make_shortcuts(courses: list[Course]):
+    shortcut_maker = ShortcutMaker()
+    for i, course in enumerate(courses):
+        shortcut_name = course.name.replace(" ", "_").replace("'", "")
+        url = f"{config.API_URL}/courses/{course.id}"
+
+        shortcuts = {
+            f"checkpoint {shortcut_name}": f'control "c:{10 + i}"',
+            # 10, 11, 12 -> 1, 2, 3, ..
+            f"checkpoint choose {shortcut_name}": f'control shift "c:{10 + i}"',
+            # 67, 68, 69 -> F1, F2, F3, ..
+            f"xdg-open {url}": f'control "c:{67 + i}"',
+            "": "",
+        }
+
+        for target, hotkey in shortcuts.items():
+            shortcut_maker.add_shortcut(hotkey, target)
+
+    shortcut_maker.save_shortcuts()
 
 
 def ask_courses(courses):
