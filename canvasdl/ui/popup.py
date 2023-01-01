@@ -109,6 +109,9 @@ class Popup:
     def amount(self, value):
         self._amount = value
 
+    def increase_amount(self, value=1):
+        self._amount += value
+
     def show_progress(self):
         if self.amount != 0 and self.amount is not None:
             # Don't go backwards

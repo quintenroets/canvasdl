@@ -1,6 +1,7 @@
 import inspect
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Any, Iterable, List
+from typing import Any
 
 from canvasdl.asset_types import Course, Section
 from canvasdl.ui.progressmanager import ProgressManager
@@ -31,11 +32,11 @@ class Checker:
     def make_item(cls, item):
         return SaveItem()
 
-    def get_items(self) -> List[Any]:
+    def get_items(self) -> list[Any]:
         raise NotImplementedError
 
     def __post_init__(self):
-        ProgressManager.progress.amount += 1
+        ProgressManager.progress.increase_amount()
         self.content_path = Path.content_path(self.course.name, self.names())
 
     def load_saved_content(self):
@@ -68,7 +69,7 @@ class Checker:
     def is_new(self, item: SaveItem):
         return item.save_id not in self.old_content
 
-    def process_new_items(self, items: List[SaveItem]):
+    def process_new_items(self, items: list[SaveItem]):
         download_items = [it for it in items if it.should_download()]
         if download_items:
             self.download_new_items(download_items)
@@ -76,7 +77,7 @@ class Checker:
         if config.save_content:
             self.save_new_content(items)
 
-    def download_new_items(self, items: List[SaveItem]):
+    def download_new_items(self, items: list[SaveItem]):
         section = Section(self.path, self.course, items)
         download_progress = DownloadProgress(section)
         for item in items:
@@ -85,7 +86,7 @@ class Checker:
         self.export_downloads()
         download_progress.enable_show()
 
-    def save_new_content(self, items: List[SaveItem]):
+    def save_new_content(self, items: list[SaveItem]):
         self.old_content = (self.old_content or {}) | {
             item.save_id: "" for item in items
         }
