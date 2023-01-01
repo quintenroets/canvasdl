@@ -40,7 +40,8 @@ class Checker(tab.Checker):
         params = {"sortfield": "CreatedDate", "sortOrder": "Desc"}
         # pageNumber, https://demo.hosted.panopto.com/Panopto/api/docs
         # /index.html#/Folders/Folders_GetSessions
-        content = session.get(url, params=params).json()["Results"]
+        response = session.get(url, params=params)
+        content = response.json()["Results"]
         return content
 
     def get_folder_id(self, name):
@@ -48,9 +49,8 @@ class Checker(tab.Checker):
         if self.should_check():
             url = f"{self.api_url}folders/search"
             params = {"searchQuery": name}
-            results = self.authenticated_session.get(url, params=params).json()[
-                "Results"
-            ]
+            response = self.authenticated_session.get(url, params=params)
+            results = response.json()["Results"]
             if results:
                 folder_id = results[0]["Id"]
 
