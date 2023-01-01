@@ -1,12 +1,13 @@
+beautifulsoup4
 canvasapi
+dacite
+gcsa
+ics
+m3u8
+pandas
+piazza-api
 python-dateutil
 pywebcopy
-pandas
-beautifulsoup4
-ics
-gcsa
-piazza-api
-dacite
 
 downloader @ git+https://github.com/quintenroets/downloader
 libs @ git+https://github.com/quintenroets/libs
