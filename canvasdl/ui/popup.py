@@ -88,6 +88,9 @@ class Popup:
         self._progress = value
         self.show_progress()
 
+    def increase_progress(self, value=1):
+        self._progress += value
+
     @property
     def percentage(self):
         return 100 * self.progress / self.amount

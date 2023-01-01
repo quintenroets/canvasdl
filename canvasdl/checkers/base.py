@@ -47,7 +47,7 @@ class Checker:
 
     def check(self):
         self.check_new_content()
-        ProgressManager.progress.progress += 1
+        ProgressManager.increase_progress()
         UserInterface.add_check()
 
     def check_new_content(self):
