@@ -5,10 +5,16 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
 import cli
-from .widget import Widget
 
-if TYPE_CHECKING:
-    from ..asset_types import Section
+try:
+    from .widget import Widget  # noqa: autoimport
+
+
+except (ImportError, ModuleNotFoundError):
+    pass
+
+if TYPE_CHECKING:  # noqa: autoimport
+    from ..asset_types import Section  # noqa: autoimport
 
 
 @dataclass
