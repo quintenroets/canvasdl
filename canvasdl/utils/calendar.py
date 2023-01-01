@@ -3,6 +3,7 @@ from datetime import datetime, time, timedelta
 from gcsa.event import Event
 from gcsa.google_calendar import GoogleCalendar
 
+from . import configchecker
 from .config import config
 from .path import Path
 
@@ -10,7 +11,9 @@ DAY = timedelta(days=1)
 
 
 def add_todo(message, date):
-    if date.replace(tzinfo=None) > datetime.now():
+    use_calendar = configchecker.google_calendar_credentials_valid()
+    is_future_event = date.replace(tzinfo=None) > datetime.now()
+    if use_calendar and is_future_event:
         add_event(message, date, date)
 
 
