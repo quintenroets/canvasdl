@@ -16,19 +16,30 @@ DEFAULT_API_URL = "https://courseworks2.columbia.edu"
 
 
 def make_config():
-    Path.config.yaml = {}
-    # store api key in plaintext file and encrypt it
-    # give warning that other user should also encrypt it
+    config = get_config_info()
+    question = (
+        "Do you want to save your config in an encrypted file? "
+        "(you need ksshaskpass and gpg installed for this)"
+    )
+    config_file = (
+        Path.config.encrypted if Confirm().ask(question, default=False) else Path.config
+    )
+    config_file.yaml = config
 
-    ask_value(
+
+def get_config_info():
+    config = {}
+
+    config = ask_value(
+        config,
         "API_URL",
         "Canvas url of your school",
         DEFAULT_API_URL,
         lambda url: configchecker.is_valid_url(url, ""),
     )
 
-    config = Path.config.yaml
-    ask_value(
+    config = ask_value(
+        config,
         "API_KEY",
         "Your Canvas API key",
         None,
@@ -44,6 +55,7 @@ def make_config():
         dummy_name = "CREDS"
         if not configchecker.google_calendar_credentials_valid():
             ask_value(
+                config,
                 dummy_name,
                 "Please obtain a google calendar credentials file (instructions in"
                 f" Readme) and save it to {Path.calendar_credentials} (press enter when"
@@ -51,28 +63,28 @@ def make_config():
                 None,
                 lambda response: configchecker.google_calendar_credentials_valid(),
             )
-            Path.config.yaml = Path.config.yaml.pop(dummy_name)
 
-        config = Path.config.yaml
         if "google_calendar_id" not in config:
             question = (
                 "Do you want to use a custom calendar id? (only relevant if your"
                 " account has multiple calendars)"
             )
             if Confirm().ask(question, default=False):
-                ask_value(
+                config = ask_value(
+                    config,
                     "google_calendar_id",
                     "Id of your google calendar",
                     None,
                     lambda id: configchecker.google_calendar_credentials_valid(id),
                 )
+    return config
 
 
-def ask_value(name, message, default=None, check_function=None):
+def ask_value(config, name, message, default=None, check_function=None):
     base_message = message
     message_changed = False
 
-    while name not in Path.config.yaml:
+    while name not in config:
         prompt = Prompt()
         response = prompt.ask(message, default=default)
         valid_response = check_function is None
@@ -81,7 +93,9 @@ def ask_value(name, message, default=None, check_function=None):
                 valid_response = check_function(response)
 
         if valid_response:
-            Path.config.yaml |= {name: response}
+            config[name] = response
         elif not message_changed:
             message = f"Error: please provide valid value for {message}"
             message_changed = True
+
+    return config

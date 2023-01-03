@@ -19,11 +19,15 @@ class Config:
 
     @classmethod
     def load(cls):
-        config_path = Path.config
         args = argparser.get_args()
-        if not config_path.exists() or args.configure:
+        if args.configure or not cls.config_file().exists():
             configmaker.make_config()
-        return Config(**config_path.yaml)
+        config_dict = cls.config_file().yaml
+        return Config(**config_dict)
+
+    @classmethod
+    def config_file(cls):
+        return Path.config if Path.config.exists() else Path.config.encrypted
 
 
 config = Config.load()
