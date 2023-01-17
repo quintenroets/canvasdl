@@ -18,7 +18,7 @@ class Assignment(Asset, SaveItem):
     updated_at_date: datetime
     lock_at: str | None
     unlock_at: str | None
-    description: str
+    description: str | None
     due_at: str | None
     points_possible: float
     grading_type: Any

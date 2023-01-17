@@ -51,7 +51,7 @@ class File(Item):
     modified_at: str
     modified_at_date: datetime
     mime_class: str
-    media_entry_id: None
+    media_entry_id: str | None
     category: str | None = None
     root: Path = None
 
