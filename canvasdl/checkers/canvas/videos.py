@@ -36,12 +36,15 @@ class Checker(tab.Checker):
         session = self.authenticated_session
         folder_id = self.course.video_id
 
-        url = f"{self.api_url}folders/{folder_id}/sessions"
-        params = {"sortfield": "CreatedDate", "sortOrder": "Desc"}
-        # pageNumber, https://demo.hosted.panopto.com/Panopto/api/docs
-        # /index.html#/Folders/Folders_GetSessions
-        response = session.get(url, params=params)
-        content = response.json()["Results"]
+        if folder_id:
+            url = f"{self.api_url}folders/{folder_id}/sessions"
+            params = {"sortfield": "CreatedDate", "sortOrder": "Desc"}
+            # pageNumber, https://demo.hosted.panopto.com/Panopto/api/docs
+            # /index.html#/Folders/Folders_GetSessions
+            response = session.get(url, params=params)
+            content = response.json()["Results"]
+        else:
+            content = []
         return content
 
     def get_folder_id(self, name):
