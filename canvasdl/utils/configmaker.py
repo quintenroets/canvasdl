@@ -63,6 +63,7 @@ def get_config_info():
                 None,
                 lambda response: configchecker.google_calendar_credentials_valid(),
             )
+            config.pop(dummy_name)
 
         if "google_calendar_id" not in config:
             question = (
