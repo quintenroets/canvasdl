@@ -30,7 +30,7 @@ Make sure you are using python3.9+
 
 1) Install the package
     ```shell
-    pip install git+https://github.com/quintenroets/canvasdl
+    pip install canvasdl
     ```
 2) Obtain Canvas API key
     - Columbia University students
