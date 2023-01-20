@@ -19,13 +19,13 @@ setup(
     author_email="quinten.roets@gmail.com",
     url="https://github.com/quintenroets/canvasdl",
     download_url=(
-        "https://github.com/quintenroets/canvasdl/archive/refs/tags/v0.0.3.tar.gz"
+        "https://github.com/quintenroets/canvasdl/archive/refs/tags/v1.3.0.tar.gz"
     ),
     description="course content synchronizer",
     long_description=Path("README.md").read_text(),
     long_description_content_type="text/markdown",
     name=NAME,
-    version="1.2",
+    version="1.3",
     packages=find_packages(),
     setup_requires=read("setup_requirements.txt"),
     install_requires=read("requirements.txt"),
