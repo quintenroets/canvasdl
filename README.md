@@ -36,7 +36,6 @@ Make sure you are using python3.9+
     - Columbia University students
       - Go to Courseworks > Account > Settings
       - Click on "New Access Token"
-    - [General instructions](https://community.canvaslms.com/t4/Admin-Guide/How-do-I-add-a-developer-API-key-for-an-account/ta-p/259)
 
 3) [Optional] Obtain Google Calendar [API key](https://developers.google.com/calendar/api/quickstart/python#authorize_credentials_for_a_desktop_application)
 4) [Optional] Specify custom [Calendar ID](https://xfanatical.com/blog/how-to-find-your-google-calendar-id/)
