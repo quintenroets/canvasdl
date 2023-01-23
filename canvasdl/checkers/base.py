@@ -40,7 +40,7 @@ class Checker:
         self.content_path = Path.content_path(self.course.name, self.names())
 
     def load_saved_content(self):
-        self.old_content = self.content_path.content or {}
+        self.old_content = self.content_path.yaml
 
     def should_check(self):
         return True
@@ -90,7 +90,7 @@ class Checker:
         self.old_content = (self.old_content or {}) | {
             item.save_id: "" for item in items
         }
-        self.content_path.content = self.old_content
+        self.content_path.yaml = self.old_content
 
     def export_downloads(self):
         pass

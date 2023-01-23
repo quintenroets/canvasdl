@@ -22,7 +22,7 @@ def save_courses(courses: list[Course]):
 
     courses_dict = [c.dict() for c in courses]
     if config.update_content:
-        Path.courses.content = courses_dict
+        Path.courses.yaml = courses_dict
 
     return courses_dict
 

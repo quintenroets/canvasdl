@@ -1,5 +1,4 @@
 from collections import defaultdict
-from typing import List
 
 from canvasdl.asset_types import File, Section
 
@@ -9,7 +8,7 @@ from . import base
 
 
 class Checker(base.Checker):
-    def get_items(self) -> List[File]:
+    def get_items(self) -> list[File]:
         files = self.api.get_files(sort="updated_at", order="desc")  # most recent first
 
         new_files = []
@@ -29,7 +28,7 @@ class Checker(base.Checker):
     def is_new(self, item: File):
         return True
 
-    def process_new_items(self, items: List[File]):
+    def process_new_items(self, items: list[File]):
         file_sections = defaultdict(lambda: [])
         for item in items:
             key = item.get_full_path().parent
@@ -45,6 +44,6 @@ class Checker(base.Checker):
         if config.save_content:
             self.save_new_content(items)
 
-    def save_new_content(self, items: List[File]):
+    def save_new_content(self, items: list[File]):
         self.old_content |= {item.id: item.updated_at for item in items}
-        self.content_path.content = self.old_content
+        self.content_path.yaml = self.old_content
