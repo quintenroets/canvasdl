@@ -24,16 +24,26 @@ class Url(SaveItem):
 
     @property
     def relative_url(self):
-        return self.url.replace(self.root_url, "")
+        url = self.url.replace(self.root_url, "")
+        url = urllib.parse.urlparse(url).path
+        return url
 
     @property
     def local_file(self):
-        return self.folder / self.relative_url
+        return self.folder.subpath(*self.relative_url.split("/"))
+
+    @property
+    def is_html_content(self):
+        is_html = self.local_file.suffix == ".html"
+        if not is_html:
+            headers = requests.get(self.url, headers=self.headers, stream=True).headers
+            content_type = headers.get("content-type") or headers.get("Content-Type")
+            is_html = "text/html" in content_type
+        return is_html
 
     def save(self):
         dest = self.local_file
-        if dest.suffix == ".html":
-            self.folder /= "Homepage"
+        if self.is_html_content:
             base_tag = f"<base href='{self.root_url}'>"
             dest.text = base_tag + requests.get(self.url).text
         else:
@@ -49,13 +59,22 @@ class Url(SaveItem):
     def save_id(self):
         return self.relative_url
 
+    @property
+    def headers(self):
+        browser = (
+            "Mozilla/5.0 (X11; Linux x86_64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/85.0.4183.83 Safari/537.36"
+        )
+        return {"User-Agent": browser}
+
 
 class Checker(base.Checker):
     def make_item(self, item):
         return (
             Due(*item)
             if isinstance(item, tuple)
-            else Url(item, self.url, self.path.parent)
+            else Url(item, self.url, self.path.parent / "Homepage")
         )
 
     def get_urls(self):
@@ -70,7 +89,7 @@ class Checker(base.Checker):
         return root_url
 
     def sub_urls(self):
-        return next(iter(self.get_urls().values()))
+        return self.get_urls().values()
 
     @property
     def path(self):
@@ -78,7 +97,7 @@ class Checker(base.Checker):
 
     def get_items(self):
         for sub_url in self.sub_urls():
-            url = f"{self.url}/{sub_url}"
+            url = urllib.parse.urljoin(self.url, sub_url).strip("/")
             yield from self.get_url_items(url)
 
     def get_url_items(self, url):
@@ -88,13 +107,8 @@ class Checker(base.Checker):
 
     def get_content_items(self, html_content):
         soup = BeautifulSoup(html_content, features="lxml")
-        urls = [
-            urllib.parse.urljoin(self.url, link.get("href"))
-            for link in soup.find_all("a")
-        ]
-        for u in urls:
-            if u.startswith(self.url):
-                yield u
+        for link in soup.find_all("a"):
+            yield urllib.parse.urljoin(self.url, link.get("href"))
 
     def get_calendar_items(self, html_content):
         with io.BytesIO(html_content) as fp:
