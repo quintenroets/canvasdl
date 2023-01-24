@@ -114,21 +114,29 @@ class Checker(base.Checker):
         with io.BytesIO(html_content) as fp:
             tables = pd.read_html(fp)
 
+        due_keywords = ("Due", "Assignments")
         for table in tables:
-            if "Due" in table.columns:
-                calendar_items = table[~table["Due"].isnull()]
-                for _, item in calendar_items.iterrows():
-                    date_key = "Date" if "Date" in table.columns else "Due"
-                    name_key = "Assignment" if "Assignment" in table.columns else "Due"
-                    date = item[date_key]
-                    if date_key == "Due":
-                        date = " ".join(date.split(" ")[1:])
-                    if date:
-                        date = date.replace("Tues", "Tue")
-                        parsed_date = dateutil.parser.parse(date)
-                        due_time = parsed_date + timedelta(hours=23, minutes=30)
-                        parsed_name = self.course.assignment_name(item[name_key])
-                        yield parsed_name, due_time
+            table.reset_index(drop=True, inplace=True)
+
+            for due_keyword in due_keywords:
+                if due_keyword in table.columns:
+                    calendar_items = table[~table[due_keyword].isnull()]
+                    for _, item in calendar_items.iterrows():
+                        date_key = "Date" if "Date" in table.columns else due_keyword
+                        name_key = (
+                            "Assignment"
+                            if "Assignment" in table.columns
+                            else due_keyword
+                        )
+                        date = item[date_key]
+                        if date_key == "Due":
+                            date = " ".join(date.split(" ")[1:])
+                        if date:
+                            date = date.replace("Tues", "Tue")
+                            parsed_date = dateutil.parser.parse(date)
+                            due_time = parsed_date + timedelta(hours=23, minutes=30)
+                            parsed_name = self.course.assignment_name(item[name_key])
+                            yield parsed_name, due_time
 
     def should_check(self) -> bool:
         return bool(self.course.websites)
