@@ -1,4 +1,3 @@
-import io
 import urllib.parse
 from dataclasses import dataclass
 from datetime import timedelta
@@ -45,6 +44,7 @@ class Url(SaveItem):
         dest = self.local_file
         if self.is_html_content:
             base_tag = f"<base href='{self.root_url}'>"
+            dest = dest.with_suffix(".html")
             dest.text = base_tag + requests.get(self.url).text
         else:
             downloader.download(self.url, dest)
@@ -89,7 +89,7 @@ class Checker(base.Checker):
         return root_url
 
     def sub_urls(self):
-        return self.get_urls().values()
+        return next(iter(self.get_urls().values()))
 
     @property
     def path(self):
@@ -101,18 +101,20 @@ class Checker(base.Checker):
             yield from self.get_url_items(url)
 
     def get_url_items(self, url):
-        html_content = requests.get(url).content
-        for extractor in (self.get_calendar_items, self.get_content_items):
-            yield from extractor(html_content)
+        html_content: bytes = requests.get(url).content
+        extractors = (self.get_content_items,)  # get_calendar_items
+        for extractor in extractors:
+            yield from extractor(html_content)  # noqa
 
     def get_content_items(self, html_content):
         soup = BeautifulSoup(html_content, features="lxml")
         for link in soup.find_all("a"):
             yield urllib.parse.urljoin(self.url, link.get("href"))
 
-    def get_calendar_items(self, html_content):
-        with io.BytesIO(html_content) as fp:
-            tables = pd.read_html(fp)
+    def get_calendar_items(self, html_content: bytes):
+        with Path.tempfile() as tmp:
+            tmp.byte_content = html_content
+            tables = pd.read_html(tmp)
 
         due_keywords = ("Due", "Assignments")
         for table in tables:
