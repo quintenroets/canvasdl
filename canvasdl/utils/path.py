@@ -18,6 +18,6 @@ class Path(plib.Path):
     @classmethod
     def content_path(cls, course, names=None):
         names = names or ()
-        path = Path.content_assets.subpath(*names, course).with_suffix(".txt")
+        path = Path.content_assets.subpath(*names, course).with_suffix(".yaml")
         path = Path(path)  # convert to right type
         return path
