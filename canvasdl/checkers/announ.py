@@ -11,9 +11,8 @@ from . import base
 class Checker(base.Checker, ABC):
     def __post_init__(self):
         super().__post_init__()
-        self.save_folder = Path.content_path(self.course.name, ("announ",)).with_suffix(
-            ""
-        )
+        names = ("announ",)
+        self.save_folder = Path.content_path(self.course.name, names).with_suffix("")
 
     @property
     def path(self):
@@ -31,9 +30,8 @@ class Checker(base.Checker, ABC):
         self.path.tag = 9999
 
     def load_announs(self):
-        paths = sorted(
-            list(self.save_folder.iterdir()), key=lambda path: -int(path.mtime)
-        )
+        paths = self.save_folder.iterdir()
+        paths = sorted(list(paths), key=lambda path: -int(path.mtime))
         announs = [path.yaml for path in paths]
         last_announ_time = parse_time(announs[0]["created_at"])
         announs = "<br><hr>".join(

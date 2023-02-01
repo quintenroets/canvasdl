@@ -1,3 +1,4 @@
+fail_fast: true
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.3.0
@@ -39,3 +40,11 @@ repos:
       - id: flake8
         name: Check PEP8
         stages: [commit]
+  - repo: local
+    hooks:
+    -   id: publish 
+        name: publish on pypi
+        language: system
+        entry: publish
+        pass_filenames: false
+        always_run: true
