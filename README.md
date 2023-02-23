@@ -37,27 +37,21 @@ Make sure you are using python3.9+
     pip install canvasdl
     
     ```
-2) Install manual requirements
-    ```shell
-    pip install git+https://github.com/quintenroets/downloader
-    pip install git+https://github.com/quintenroets/video_exporter
-    
-    ```
-3) Obtain Canvas API key
+2) Obtain Canvas API key
     - Columbia University students
       - Go to Courseworks > Account > Settings
       - Click on "New Access Token"
 
-4) [Optional] Obtain Google Calendar [API key](https://developers.google.com/calendar/api/quickstart/python#authorize_credentials_for_a_desktop_application)
-5) [Optional] Specify custom [Calendar ID](https://xfanatical.com/blog/how-to-find-your-google-calendar-id/)
-6) Configure your settings:
+3) [Optional] Obtain Google Calendar [API key](https://developers.google.com/calendar/api/quickstart/python#authorize_credentials_for_a_desktop_application)
+4) [Optional] Specify custom [Calendar ID](https://xfanatical.com/blog/how-to-find-your-google-calendar-id/)
+5) Configure your settings:
    ```shell
    canvasdl --configure
    ```
-7) Install package for local file management
+6) Install package for local file management
    - python-xattr
    - [mediainfo](https://manpages.ubuntu.com/manpages/bionic/man1/mediainfo.1.html)
-8) [Optional] Install package for UI progress during synchronization
+7) [Optional] Install package for UI progress during synchronization
    - python-pyqt6
    - pip install PyQt6
 
