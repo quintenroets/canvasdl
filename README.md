@@ -1,7 +1,7 @@
 # Canvasdl
 
-![Alt text](examples/console.png?raw=true)
-![Alt text](examples/screen.png?raw=true)
+![Console image](https://raw.githubusercontent.com/quintenroets/canvasdl/main/examples/console.png?raw=true)
+![Screen image](https://raw.githubusercontent.com/quintenroets/canvasdl/main/examples/screen.png?raw=true)
 
 Tired of managing your course content on 5-10 different platforms? 
 Canvasdl comes to the rescue and saves you hours of work when studying and completing assignments.
