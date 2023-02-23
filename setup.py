@@ -3,7 +3,7 @@ from pathlib import Path
 from setuptools import find_packages, setup
 
 NAME = "canvasdl"
-version = "1.4.9"
+version = "1.4.10"
 
 
 def read(filename):

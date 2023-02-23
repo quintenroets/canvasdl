@@ -1,5 +1,8 @@
 # Canvasdl
 
+![Alt text](examples/console.png?raw=true)
+![Alt text](examples/screen.png?raw=true)
+
 Tired of managing your course content on 5-10 different platforms? 
 Canvasdl comes to the rescue and saves you hours of work when studying and completing assignments.
 This convenient package:
@@ -19,10 +22,11 @@ This convenient package:
    - Google Drive
    - Piazza
    - Gradescope
-- Developed for students at Columbia University 
-- Useful for any school with (partly) the same platforms
-- Developed for Linux OS. 
-- Contact developer for other platforms support.
+- Developed for:
+   - Students at Columbia University 
+   - Linux OS. 
+- Useful for any school using any of the listed platforms
+- Contact developer for other OS/platforms support.
 
 ## Installation
 
