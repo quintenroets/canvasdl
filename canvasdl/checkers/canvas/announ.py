@@ -13,7 +13,7 @@ class Checker(base.Checker, announ.Checker):
     check_time: str = ""
 
     @classmethod
-    def current_time() -> str:
+    def current_time(cls) -> str:
         return (datetime.now() - timedelta(days=365)).isoformat()
 
     def load_saved_content(self):
