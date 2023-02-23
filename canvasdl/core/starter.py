@@ -1,8 +1,7 @@
-from libs.threading import Threads
-
 from canvasdl.checkers import get_checkers
 from canvasdl.ui.userinterface import UserInterface
 
+from ..utils.threading import Threads
 from . import courseinfo
 
 

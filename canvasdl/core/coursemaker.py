@@ -1,11 +1,12 @@
 import cli
-from libs.shortcutmaker import ShortcutMaker
 from rich.prompt import Confirm, Prompt
 
 from canvasdl import client
 from canvasdl.asset_types import Course
 from canvasdl.checkers.canvas import videos
 from canvasdl.utils import Path, config
+
+from ..utils.shortcutmaker import ShortcutMaker
 
 
 def make_courses():
@@ -25,28 +26,6 @@ def save_courses(courses: list[Course]):
         Path.courses.yaml = courses_dict
 
     return courses_dict
-
-
-# no longer used
-def parse_courses(courses):
-    def parse_name(name: str):
-        delim = " - "
-        return name.split(delim)[1] if delim in name else name
-
-    def include_course(course):
-        return hasattr(course, "original_name")  # check if nickname given
-
-    courses = [c for c in courses if include_course(c)]
-    parsed_courses = []
-
-    for c in courses:
-        course = Course(name=parse_name(c.name), id=c.id)
-        video_id = videos.Checker(course).get_folder_id(c.original_name)
-        course.video_id = video_id
-        parsed_courses.append(course)
-
-    courses = sorted(parsed_courses, key=lambda item: item.name.lower())
-    return courses
 
 
 def make_shortcuts(courses: list[Course]):
