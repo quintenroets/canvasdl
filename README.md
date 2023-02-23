@@ -55,3 +55,7 @@ Run command to synchronize all content and check for updates
 ```shell
 canvasdl
 ```
+
+## Quickstart
+To quickly experiment with the package you can run the [quickstart](https://github.com/quintenroets/canvasdl/blob/main/examples/quickstart.ipynb) in Google Collab.
+The downloaded content will be available in the folder /root/Documents in the Google Collab session.
