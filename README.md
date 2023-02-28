@@ -49,7 +49,7 @@ Make sure you are using python3.9+
    canvasdl --configure
    ```
 6) Install package for local file management
-   - python-xattr
+   - xattr
    - [mediainfo](https://manpages.ubuntu.com/manpages/bionic/man1/mediainfo.1.html)
 7) [Optional] Install package for UI progress during synchronization
    - python-pyqt6
