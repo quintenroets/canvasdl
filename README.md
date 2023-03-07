@@ -30,7 +30,7 @@ This convenient package:
 
 ## Installation
 
-Make sure you are using python3.9+
+Make sure you are using python3.10+
 
 1) Install the package
     ```shell
