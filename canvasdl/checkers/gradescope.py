@@ -47,7 +47,12 @@ def parse_date(date_str):
     if end in date_str:
         date_str = date_str.split(end)[0].strip()
 
-    start_pos = date_str.rfind("M", 0, -1)
-    date_str = date_str[start_pos + 1 :]
+    start_positions = (
+        date_str.rfind(end_keyword, 0, -1) + len(end_keyword)
+        for end_keyword in ("AM", "PM")
+        if end_keyword in date_str[:-1]
+    )
+    start_pos = max(start_positions)
+    date_str = date_str[start_pos:]
     date = dateutil.parser.parse(date_str)
     return date
