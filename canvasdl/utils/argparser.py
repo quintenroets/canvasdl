@@ -13,5 +13,5 @@ def get_args():
     )
     # don't parse arguments if invoked with pytest
     parser_args = ([],) if "pytest" in sys.modules else ()
-    args = parser.parse_args(*parser_args)
+    args, _ = parser.parse_known_args(*parser_args)
     return args
