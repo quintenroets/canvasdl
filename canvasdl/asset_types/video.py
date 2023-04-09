@@ -82,6 +82,8 @@ class SavedVideo(base.Item):
         saved_info = dict(
             folder=folder / self.id, name=self.filename_title, mtime=self.mtime
         )
-        streams_info = {"streams": info["Delivery"]["Streams"]} | saved_info
-        streams = Streams.from_dict(streams_info)
-        streams.download()
+        delivery_key = "Delivery"
+        if delivery_key in info:
+            streams_info = {"streams": info["Delivery"]["Streams"]} | saved_info
+            streams = Streams.from_dict(streams_info)
+            streams.download()
