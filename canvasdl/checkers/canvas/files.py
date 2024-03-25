@@ -29,7 +29,7 @@ class Checker(base.Checker):
         return True
 
     def process_new_items(self, items: list[File]):
-        file_sections = defaultdict(lambda: [])
+        file_sections = defaultdict(list)
         for item in items:
             key = item.get_full_path().parent
             file_sections[key].append(item)
