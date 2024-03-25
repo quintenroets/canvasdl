@@ -12,7 +12,7 @@ from .canvas import tab
 @dataclass
 class Checker(announ.Checker, tab.Checker):
     api_url: str = None
-    api_headers: Dict = None
+    api_headers: dict = None
 
     @property
     def pin_amount_path(self):
@@ -29,7 +29,7 @@ class Checker(announ.Checker, tab.Checker):
         thread = threads[0] if threads else None
         return thread
 
-    def get_items(self) -> List[Any]:
+    def get_items(self) -> list[Any]:
         self.prepare_api()
         items = [*self.get_thread_items(), *self.get_unpinned_items()]
         return items

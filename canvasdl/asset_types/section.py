@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import typing
 from dataclasses import dataclass
-from typing import Iterable
+from collections.abc import Iterable
 
 from ..utils import Path
 from .course import Course

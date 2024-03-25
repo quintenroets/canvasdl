@@ -52,7 +52,7 @@ class Announcement(SaveItem):
     glanced_at: str | None
     new_reply_count: int
     duplicate_title: None
-    user: Dict
+    user: dict
 
     save_folder: Path = None
 

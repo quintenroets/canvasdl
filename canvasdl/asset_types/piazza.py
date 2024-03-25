@@ -18,7 +18,7 @@ class History(base.Item):
 @dataclass
 class Announcement(SaveItem):
     history_size: int
-    folders: List[str]
+    folders: list[str]
     nr: int
     data: Any
     created: str
@@ -26,13 +26,13 @@ class Announcement(SaveItem):
     no_answer_followup: int
     change_log: Any
     bucket_name: str
-    history: List[History]
+    history: list[History]
     type: str
-    tags: List[str]
-    tag_good: List[Any]
+    tags: list[str]
+    tag_good: list[Any]
     unique_views: int
-    children: List[Any]
-    tag_good_arr: List[str]
+    children: list[Any]
+    tag_good_arr: list[str]
     id: str
     config: Any
     status: str

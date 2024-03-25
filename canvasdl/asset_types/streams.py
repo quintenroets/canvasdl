@@ -21,7 +21,7 @@ class Stream(base.Item):
     RelativeStart: float
     RelativeEnd: float
     StreamUrl: str
-    RelativeSegments: List[RelativeSegment] | None
+    RelativeSegments: list[RelativeSegment] | None
 
     @property
     def duration(self):
@@ -75,7 +75,7 @@ class DownloadStream(Stream):
 
 @dataclass
 class Streams(base.Item):
-    streams: List[Stream]
+    streams: list[Stream]
     folder: Path
     name: str
     mtime: float
